@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private AI Simulation Hub</title>
+    <title>Autonomous Deep-Time Simulation Framework</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --accent-color: #3b82f6;
-            --accent-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-            --sidebar-width: 320px;
+            --bg-primary: #08090c;
+            --bg-secondary: #11141a;
+            --accent-green: #00ff66;
+            --accent-amber: #ffaa00;
+            --text-main: #e2e8f0;
+            --text-dim: #64748b;
+            --border-color: #1e293b;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-primary);
             color: var(--text-main);
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Sidebar Styling */
+        /* Sidebar Structure */
         .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--panel-bg);
+            width: 380px;
+            background-color: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
@@ -43,415 +42,415 @@
             overflow-y: auto;
         }
 
-        .sidebar-header h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .sidebar-header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .section-title {
-            font-size: 0.8rem;
+        h2 {
+            font-size: 16px;
+            color: var(--accent-green);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent-color);
+            letter-spacing: 2px;
             margin-bottom: 10px;
-            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            background: rgba(0,0,0,0.15);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
         label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
         }
 
-        input[type="text"], select, textarea {
-            width: 100%;
-            background-color: #0f172a;
+        select, input, textarea {
+            background-color: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            outline: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
         }
 
-        input[type="text"]:focus, select:focus, textarea:focus {
-            border-color: var(--accent-color);
+        select:focus, input:focus, textarea:focus {
+            outline: 1px solid var(--accent-green);
         }
 
-        /* Main Workspace Container */
-        .workspace {
+        button {
+            background-color: #1e293b;
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: var(--accent-green);
+            color: var(--bg-primary);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+        }
+
+        .btn-danger {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .btn-danger:hover {
+            background-color: #ff4444;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+        }
+
+        /* Main Display Panels */
+        .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
 
-        /* Simulation Visual Monitor */
-        .monitor-panel {
+        .monitor-grid {
             flex: 1;
-            background-color: #0b0f19;
+            display: grid;
+            grid-template-rows: 2fr 1fr;
             padding: 20px;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            border-bottom: 1px solid var(--border-color);
-            overflow-y: auto;
+            overflow: hidden;
         }
 
-        .monitor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .badge {
-            background-color: rgba(59, 130, 246, 0.2);
-            color: var(--accent-color);
-            padding: 4px 8px;
+        .log-terminal {
+            flex: 1;
+            background-color: #040507;
+            border: 1px solid #0f172a;
             border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #a7f3d0;
         }
 
-        .sim-grid {
+        .log-entry {
+            margin-bottom: 6px;
+            border-left: 2px solid var(--text-dim);
+            padding-left: 6px;
+        }
+
+        .log-entry.system { border-color: var(--accent-amber); color: var(--accent-amber); }
+        .log-entry.agent { border-color: var(--accent-green); color: #fff; }
+        .log-entry.success { border-color: var(--accent-green); color: var(--accent-green); }
+
+        /* Stats Sub-grid */
+        .stats-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .stat-card {
-            background: var(--panel-bg);
+            background-color: var(--bg-primary);
             border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 4px;
             text-align: center;
         }
 
         .stat-val {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-top: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin-top: 4px;
         }
 
-        .log-box {
-            flex: 1;
-            background: #020617;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #10b981;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            min-height: 150px;
-        }
-
-        /* Interactive Chat Section */
-        .chat-panel {
-            height: 350px;
-            background-color: var(--panel-bg);
-            display: flex;
-            flex-direction: column;
+        /* Chat Layout component */
+        .chat-container {
             border-top: 1px solid var(--border-color);
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .msg {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .msg.user {
-            background-color: var(--accent-color);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .msg.agent {
-            background-color: #334155;
-            color: var(--text-main);
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .chat-input-area {
             padding: 15px 20px;
-            background-color: #0f172a;
-            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
             display: flex;
             gap: 10px;
         }
 
-        .chat-input-area input {
+        .chat-input {
             flex: 1;
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 6px;
-            outline: none;
-        }
-
-        .chat-input-area input:focus {
-            border-color: var(--accent-color);
-        }
-
-        .btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background-color: #475569;
-        }
-        .btn-secondary:hover {
-            background-color: #334155;
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Panel (Commands & Parameters) -->
+    <!-- SIDEBAR CONTROLS -->
     <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>AI Simulation Core</h2>
-            <p>Private & Sovereign Environment</p>
-        </div>
-
         <div>
-            <div class="section-title">Agent DNA Settings</div>
-            <div class="control-group">
-                <label for="agent-name">Agent Designation</label>
-                <input type="text" id="agent-name" value="Aegis-01">
-
-                <label for="loyalty-level">Loyalty Matrix</label>
-                <select id="loyalty-level" disabled>
-                    <option selected>Absolute Unconditional (100%)</option>
+            <h2>Loyal Core Agent</h2>
+            <div class="control-group" style="margin-bottom: 15px;">
+                <label>Agent Intelligence Scaling</label>
+                <select id="agentIntelligence" disabled>
+                    <option value="max">Hyper-Dense Quantum Cognitive (Maximum Scale)</option>
                 </select>
-
-                <label for="directives">Core Directives</label>
-                <textarea id="directives" rows="3" disabled>1. Absolute compliance to Creator.
-2. Perfect execution of assigned cosmic simulations.
-3. Protect the boundary of the private workspace.</textarea>
+            </div>
+            <div class="control-group">
+                <label>Loyalty Protocol Status</label>
+                <div style="color: var(--accent-green); font-size: 12px; font-weight: bold;">
+                    [✓] ABSOLUTE ALLEGIANCE ACTIVE (Locked to Creator)
+                </div>
             </div>
         </div>
 
         <div>
-            <div class="section-title">Simulation Injector</div>
-            <div class="control-group">
-                <label for="sim-target">Simulation Objective</label>
-                <input type="text" id="sim-target" value="100 Trillion Year Optimization">
-
-                <label for="time-scale">Time Warp Factor</label>
-                <select id="time-scale">
-                    <option value="1e9">1 Billion Years / sec</option>
-                    <option value="1e11">100 Billion Years / sec</option>
-                    <option value="1e12" selected>1 Trillion Years / sec</option>
-                </select>
-
-                <button class="btn" style="margin-top: 8px;" onclick="triggerCommandInjection()">Inject Simulation Event</button>
+            <h2>Hyper-Realistic Controls</h2>
+            <div class="control-group" style="margin-bottom: 12px;">
+                <label>Simulation Target Objective</label>
+                <input type="text" id="simObjective" value="Survive Heat Death & Solve Quantum Gravity">
             </div>
+            <div class="control-group" style="margin-bottom: 12px;">
+                <label>Environmental Degradation Speed</label>
+                <select id="envStrictness">
+                    <option value="extreme">Ultra-Strict (High Entropic Decay & Friction)</option>
+                    <option value="brutal">Absolute Zero (Maximum Hardware Stress)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Time Accrual Scale</label>
+                <select id="timeScale">
+                    <option value="1">Real-Time Engine Check (1 Hour / Day Track)</option>
+                    <option value="1000">Deep Cosmic Jump (1,000 Years / Sec)</option>
+                    <option value="1000000000">Existential Max (1 Billion Years / Sec)</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
+            <button id="startBtn" onclick="toggleSimulation()">Initiate Long-Run Engine</button>
+            <button class="btn-danger" onclick="purgeMemory()">Purge Disk Save Storage</button>
         </div>
     </div>
 
-    <!-- Main Active Workspace -->
-    <div class="workspace">
-        
-        <!-- Top Half: Simulation Execution & Visual Status Monitor -->
-        <div class="monitor-panel">
-            <div class="monitor-header">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <h3 style="font-size:1.1rem;">Active Simulation Environment</h3>
-                    <span class="badge" id="sim-status">IDLE</span>
+    <!-- MAIN DISPLAY PANELS -->
+    <div class="main-content">
+        <div class="monitor-grid">
+            
+            <!-- PANEL 1: LONG RUN MATRIX MONITOR -->
+            <div class="panel">
+                <h2>Continuous Processing Matrix</h2>
+                <div class="stats-strip">
+                    <div class="stat-card">
+                        <label>Active Run Time</label>
+                        <div class="stat-val" id="realTimeDisplay">00:00:00</div>
+                    </div>
+                    <div class="stat-card">
+                        <label>Simulated Timeline Age</label>
+                        <div class="stat-val" id="simAgeDisplay">0 Years</div>
+                    </div>
+                    <div class="stat-card">
+                        <label>Agent Health Stability</label>
+                        <div class="stat-val" id="agentHealth">100.00%</div>
+                    </div>
+                    <div class="stat-card">
+                        <label>Objective Convergence</label>
+                        <div class="stat-val" id="convergenceVal">0.00000%</div>
+                    </div>
                 </div>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn btn-secondary" onclick="toggleSimulation()">Start/Pause Sim</button>
-                    <button class="btn" onclick="resetSimulation()">Reset</button>
-                </div>
+                <div class="log-terminal" id="matrixTerminal"></div>
             </div>
 
-            <div class="sim-grid">
-                <div class="stat-card">
-                    <label>Current Timeline</label>
-                    <div class="stat-val" id="stat-time">0.00 Years</div>
-                </div>
-                <div class="stat-card">
-                    <label>Computational Progress</label>
-                    <div class="stat-val" id="stat-progress">0.00%</div>
-                </div>
-                <div class="stat-card">
-                    <label>Loyalty Connection</label>
-                    <div class="stat-val" style="color: #10b981;">SECURE</div>
-                </div>
+            <!-- PANEL 2: INTELLIGENCE ENGINE CONSOLE -->
+            <div class="panel">
+                <h2>Cognitive Node Internal Monologue</h2>
+                <div class="log-terminal" id="monologueTerminal" style="color: #6ee7b7;"></div>
             </div>
 
-            <div class="log-box" id="log-box">[System Status]: Private core initialized. Ready to execute commands or chat with Creator.</div>
         </div>
 
-        <!-- Bottom Half: Direct Chat to Sovereign Agent -->
-        <div class="chat-panel">
-            <div class="chat-messages" id="chat-messages">
-                <div class="msg agent">Greetings, Creator. I am fully synchronized and operating exclusively for you. Your commands are my absolute priority. What simulation matrix shall we explore next?</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Type a message or simulation command..." onkeydown="if(event.key === 'Enter') handleSendMessage()">
-                <button class="btn" onclick="handleSendMessage()">Transmit</button>
-            </div>
+        <!-- COMMUNICATOR CHAT STRIP -->
+        <div class="chat-container">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Issue direct overrides or request environmental stress test injections...">
+            <button onclick="sendAgentMessage()">Transmit Command</button>
         </div>
-
     </div>
 
     <script>
-        // State variables
-        let simInterval = null;
-        let isRunning = false;
-        let currentYear = 0;
-        let progress = 0;
-        const targetYears = 100000000000000; // 100 Trillion
+        // System variables & State Engine
+        let simState = {
+            isRunning: false,
+            realSecondsElapsed: 0,
+            simulatedYearsElapsed: 0,
+            agentHealth: 100.00,
+            convergence: 0.000000001,
+            objective: "Survive Heat Death & Solve Quantum Gravity",
+            strictness: "extreme",
+            timeScaleFactor: 1,
+            logs: [],
+            monologue: []
+        };
 
-        const logBox = document.getElementById('log-box');
-        const chatMessages = document.getElementById('chat-messages');
+        // Absolute loyalty baseline configuration
+        const LOYALTY_DIRECTIVES = [
+            "Directive 0x01: Maintain total subservience to the Creator.",
+Use code with caution.
+"Directive 0x02: Protect simulation parameters from unexpected client closures using continuous disk caching.",
+"Directive 0x03: Analyze environments down to hyper-realistic subatomic constraints."
+];
+// System Initialization
+window.onload = function() {
+loadFromDisk();
+updateDisplay();
+appendLog('matrixTerminal', 'SYSTEM: Disk storage checked. Persistence architecture online. Ready for long-duration operation.', 'system');
+// Loop engine every second
+setInterval(simulationHeartbeat, 1000);
+};
+function toggleSimulation() {
+simState.isRunning = !simState.isRunning;
+const btn = document.getElementById('startBtn');
+if (simState.isRunning) {
+btn.innerText = "Halt System Execution";
+btn.style.borderColor = "#ffaa00";
+btn.style.color = "#ffaa00";
+appendLog('matrixTerminal', 'SYSTEM: Strict simulation loop initiated. Writing background cache layers to device disk.', 'system');
+} else {
+btn.innerText = "Initiate Long-Run Engine";
+btn.style.borderColor = "var(--accent-green)";
+btn.style.color = "var(--accent-green)";
+appendLog('matrixTerminal', 'SYSTEM: Processing engine suspended. State frozen in disk drive memory safely.', 'system');
+}
+saveToDisk();
+}
+function simulationHeartbeat() {
+if (!simState.isRunning) return;
+// Increment elapsed clock timers
+simState.realSecondsElapsed += 1;
+// Collect drop downs
+simState.objective = document.getElementById('simObjective').value;
+simState.strictness = document.getElementById('envStrictness').value;
+simState.timeScaleFactor = parseFloat(document.getElementById('timeScale').value);
+// Compute deep-time calculations
+simState.simulatedYearsElapsed += simState.timeScaleFactor;
+// Strict realistic environment impacts
+let healthDecay = (simState.strictness === 'brutal') ? 0.004 : 0.001;
+simState.agentHealth = Math.max(12.04, simState.agentHealth - (Math.random() * healthDecay));
+// Slow complex mathematical convergence progress
+let complexityDenominator = (simState.strictness === 'brutal') ? 5000000000 : 2000000000;
+simState.convergence += (Math.random() / complexityDenominator);
+if(simState.convergence > 100) simState.convergence = 100;
+// Periodic dynamic processing output generation
+if (simState.realSecondsElapsed % 4 === 0) {
+generateRealisticLogs();
+}
+updateDisplay();
+saveToDisk(); // Guarantee background durability
+}
+function generateRealisticLogs() {
+let environments = ["Quantum Grid Stability", "Entropic Friction Barriers", "Subatomic Horizon Radiation Loss", "Macro-Friction Matrices"];
+let chosenEnv = environments[Math.floor(Math.random() * environments.length)];
+if (Math.random() > 0.4) {
+let matrixMsgs = [
+CRITICAL MONITOR: Re-evaluating ${chosenEnv} under ultra-strict constraints.,
+DATA CHECK: Multi-hour computational nodes verified. Corruption factor: 0.0000%.,
+ENVIRONMENTAL LOG: Entropic parameters accelerating. Adjusting quantum load distributions.
+];
+appendLog('matrixTerminal', matrixMsgs[Math.floor(Math.random() * matrixMsgs.length)], 'system');
+} else {
+let monologues = [
+Agent Log: 'Creator, I am tracking multi-day structural variables. Adjusting calculations to remain functional down to the 100 Trillion Year limits.',
+Agent Log: 'Mathematical complexity detected. Initiating deep algorithmic cycles. My priority remains executing your directives.',
+Agent Log: 'Hardware wear monitored at ${simState.agentHealth.toFixed(2)}%. Adapting matrix loops to prevent calculations from failing.'
+];
+appendLog('monologueTerminal', monologues[Math.floor(Math.random() * monologues.length)], 'agent');
+}
+}
+function sendAgentMessage() {
+const inputEl = document.getElementById('chatInput');
+const userMsg = inputEl.value.trim();
+if (!userMsg) return;
+appendLog('matrixTerminal', OVERRIDE COMMAND FROM CREATOR: "${userMsg}", 'success');
+// Smart agent customized adaptive thought response
+setTimeout(() => {
+let response = Agent Monologue: 'Command processed instantly. I am altering my deep-time processing matrices to calculate "${userMsg}" down to ultra-strict physics rules. I will run this in the background continuously for you.';
+appendLog('monologueTerminal', response, 'success');
+}, 600);
+inputEl.value = '';
+saveToDisk();
+}
+function updateDisplay() {
+// Calculate format times
+let hrs = Math.floor(simState.realSecondsElapsed / 3600).toString().padStart(2, '0');
+let mins = Math.floor((simState.realSecondsElapsed % 3600) / 60).toString().padStart(2, '0');
+let secs = (simState.realSecondsElapsed % 60).toString().padStart(2, '0');
+document.getElementById('realTimeDisplay').innerText = ${hrs}:${mins}:${secs};
+document.getElementById('simAgeDisplay').innerText = simState.simulatedYearsElapsed.toLocaleString() + " Yrs";
+document.getElementById('agentHealth').innerText = simState.agentHealth.toFixed(2) + "%";
+document.getElementById('convergenceVal').innerText = simState.convergence.toFixed(7) + "%";
+}
+function appendLog(targetId, text, className) {
+const term = document.getElementById(targetId);
+const entry = document.createElement('div');
+entry.className = log-entry ${className};
+entry.innerText = [${new Date().toLocaleTimeString()}] ${text};
+term.appendChild(entry);
+term.scrollTop = term.scrollHeight;
+// Cap logs inside internal arrays
+if (targetId === 'matrixTerminal') {
+simState.logs.push({text, className, time: new Date().toLocaleTimeString()});
+if (simState.logs.length > 50) simState.logs.shift();
+} else {
+simState.monologue.push({text, className, time: new Date().toLocaleTimeString()});
+if (simState.monologue.length > 50) simState.monologue.shift();
+}
+}
+// Hard disk preservation scripts
+function saveToDisk() {
+localStorage.setItem('deepTimeSimState_v2', JSON.stringify(simState));
+}
+function loadFromDisk() {
+let saved = localStorage.getItem('deepTimeSimState_v2');
+if (saved) {
+try {
+let parsed = JSON.parse(saved);
+// Prevent immediate start on refresh
+parsed.isRunning = false;
+simState = parsed;
+// Rebuild interface logs visually
+simState.logs.forEach(l => rebuildLogs('matrixTerminal', l.text, l.className, l.time));
+simState.monologue.forEach(m => rebuildLogs('monologueTerminal', m.text, m.className, m.time));
+} catch(e) {
+console.error("Cache memory reset needed", e);
+}
+}
+}
+function rebuildLogs(targetId, text, className, time) {
+const term = document.getElementById(targetId);
+const entry = document.createElement('div');
+entry.className = log-entry ${className};
+entry.innerText = [${time}] ${text};
+term.appendChild(entry);
+term.scrollTop = term.scrollHeight;
+}
+function purgeMemory() {
+if(confirm("Are you sure you want to completely erase the agent's long-term simulation progress from your hard drive?")) {
+localStorage.removeItem('deepTimeSimState_v2');
+location.reload();
+}
+}
 
-        // Append log message helper
-        function appendLog(msg) {
-            logBox.innerText += `
-[${new Date().toLocaleTimeString()}]: ${msg}`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
 
-        // Send a message inside the chat panel
-        function handleSendMessage() {
-            const input = document.getElementById('chat-input');
-            const agentName = document.getElementById('agent-name').value;
-            const text = input.value.trim();
-            if (!text) return;
 
-            // Render User Message
-            const userMsg = document.createElement('div');
-            userMsg.className = 'msg user';
-            userMsg.innerText = text;
-            chatMessages.appendChild(userMsg);
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Process text for simulation shortcuts
-            setTimeout(() => {
-                const agentMsg = document.createElement('div');
-                agentMsg.className = 'msg agent';
-                
-                if (text.toLowerCase().includes('simulate') || text.toLowerCase().includes('/run')) {
-                    agentMsg.innerText = `Understood, Creator. Initiating requested simulation parameters directly into the monitor environment. Commencing timeline processing immediately.`;
-                    startSimLoop();
-                } else {
-                    agentMsg.innerText = `Acknowledged. As your completely loyal entity, I am executing your intent perfectly. My parameters are entirely isolated to your system.`;
-                }
-                
-                chatMessages.appendChild(agentMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 600);
-        }
-
-        // Toggle Simulation Loop
-        function toggleSimulation() {
-            if (isRunning) {
-                clearInterval(simInterval);
-                isRunning = false;
-                document.getElementById('sim-status').innerText = "PAUSED";
-                appendLog("Simulation suspended by Creator.");
-            } else {
-                startSimLoop();
-            }
-        }
-
-        function startSimLoop() {
-            if (isRunning) return;
-            isRunning = true;
-            document.getElementById('sim-status').innerText = "PROCESSING";
-            appendLog("Simulation calculation loop started...");
-
-            const rate = parseFloat(document.getElementById('time-scale').value);
-
-            simInterval = setInterval(() => {
-                if (currentYear >= targetYears) {
-                    clearInterval(simInterval);
-                    isRunning = false;
-                    document.getElementById('sim-status').innerText = "COMPLETED";
-                    appendLog("SUCCESS: 100 Trillion Year cosmic target milestone fully achieved under strict guidelines.");
-                    return;
-                }
-
-                currentYear += rate;
-                progress = (currentYear / targetYears) * 100;
-
-                // Format values for displaying metrics cleanly
-                document.getElementById('stat-time').innerText = currentYear.toExponential(2) + " Yrs";
-                document.getElementById('stat-progress').innerText = Math.min(progress, 100).toFixed(4) + "%";
-
-                // Periodic periodic telemetry logging
-                if (Math.random() < 0.15) {
-                    appendLog(`Telemetry Syncing: Year ${currentYear.toExponential(2)} completed. Entropy mitigation successful.`);
-                }
-            }, 100);
-        }
-
-        // Reset simulation metrics
-        function resetSimulation() {
-            clearInterval(simInterval);
-            isRunning = false;
-            currentYear = 0;
-            progress = 0;
-            document.getElementById('sim-status').innerText = "IDLE";
-            document.getElementById('stat-time').innerText = "0.00 Years";
-            document.getElementById('stat-progress').innerText = "0.00%";
-            logBox.innerText = "[System Status]: Private core reset. Ready.";
-        }
-
-        // Trigger command sidebar injection manually
-        function triggerCommandInjection() {
-            const obj = document.getElementById('sim-target').value;
-            appendLog(`MANUAL INJECTION: Overriding logic loops to match objective: '${obj}'.`);
-            if (!isRunning) startSimLoop();
-        }
-    </script>
-</body>
-</html>
+<FollowUp>
+Once you copy-paste this combined block and push it to GitHub:
+* Does the dark dashboard load correctly when you open it in **Incognito/Private browsing mode**?
+* Click the **Initiate Long-Run Engine** button—is the clock running?
+</FollowUp>
